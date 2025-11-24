@@ -1,13 +1,22 @@
+require('dotenv').config();
+const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET;
+const MONGO_URI = process.env.MONGO_URI;
+
 const express = require('express')
 const app = express();
 const cors = require('cors')
 const mongoose = require('mongoose')
-const UserModel = require('./models/User')
 const bcrypt = require('bcrypt')
 const cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken');
 
-mongoose.connect('mongodb://127.0.0.1:27017/loginpractice');
+
+const UserModel = require('./models/User')
+mongoose.connect(MONGO_URI)
+.then(()=>console.log("Connected to MongoDB"))
+.catch(err=>console.log("MongoDB Error : ",err));
+
 
 app.use(cookieParser())
 app.use(express.json())
@@ -42,7 +51,7 @@ app.post('/login',(req,res)=>{
                     res.json("The password is incorrect")
                 }
                 if(response){
-                    const token = jwt.sign({email:user.email},"sagar")
+                    const token = jwt.sign({email:user.email},JWT_SECRET)
                     res.cookie("token",token);
                     res.json("Success")
                 }
@@ -55,6 +64,6 @@ app.post('/login',(req,res)=>{
 })
 
 
-app.listen(3000,()=>{
+app.listen(PORT,()=>{
     console.log("Server is running")
 })
