@@ -10,7 +10,7 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:3000/login',{email,password})
+    axios.post('https://mern-app-1-4ud6.onrender.com/login',{email,password})
     .then(result => {
       console.log(result)
       if(result.data === 'Success'){
